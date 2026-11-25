@@ -18,13 +18,38 @@ public final class R {
     public static final int ic_launcher_foreground=0x7f020002;
   }
   public static final class id {
-    public static final int btnBrowse=0x7f030000;
-    public static final int btnImportJson=0x7f030001;
-    public static final int btnUpload=0x7f030002;
-    public static final int scrollLog=0x7f030003;
-    public static final int tvAccountStatus=0x7f030004;
-    public static final int tvFolderPath=0x7f030005;
-    public static final int tvLog=0x7f030006;
+    public static final int btnBrowseDrive=0x7f030000;
+    public static final int btnBrowseFb=0x7f030001;
+    public static final int btnBrowseGh=0x7f030002;
+    public static final int btnImportJsonDrive=0x7f030003;
+    public static final int btnImportJsonFb=0x7f030004;
+    public static final int btnSaveDrive=0x7f030005;
+    public static final int btnSaveGithub=0x7f030006;
+    public static final int btnUploadDrive=0x7f030007;
+    public static final int btnUploadFb=0x7f030008;
+    public static final int btnUploadGithub=0x7f030009;
+    public static final int etDriveFolderId=0x7f03000a;
+    public static final int etGithubBranch=0x7f03000b;
+    public static final int etGithubRepo=0x7f03000c;
+    public static final int etGithubToken=0x7f03000d;
+    public static final int layoutDrive=0x7f03000e;
+    public static final int layoutFirebase=0x7f03000f;
+    public static final int layoutGithub=0x7f030010;
+    public static final int scrollLogDrive=0x7f030011;
+    public static final int scrollLogFb=0x7f030012;
+    public static final int scrollLogGh=0x7f030013;
+    public static final int tabDrive=0x7f030014;
+    public static final int tabFirebase=0x7f030015;
+    public static final int tabGithub=0x7f030016;
+    public static final int tvAccountStatusDrive=0x7f030017;
+    public static final int tvAccountStatusFb=0x7f030018;
+    public static final int tvFolderPathDrive=0x7f030019;
+    public static final int tvFolderPathFb=0x7f03001a;
+    public static final int tvFolderPathGh=0x7f03001b;
+    public static final int tvGithubStatus=0x7f03001c;
+    public static final int tvLogDrive=0x7f03001d;
+    public static final int tvLogFb=0x7f03001e;
+    public static final int tvLogGh=0x7f03001f;
   }
   public static final class layout {
     public static final int activity_main=0x7f040000;
