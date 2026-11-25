@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <!-- الألوان الأساسية الخاصة بك -->
+        <item name="android:colorPrimary">#00C853</item>
+        <item name="android:colorPrimaryDark">#121212</item>
+        <item name="android:colorAccent">#00E676</item>
+        
+        <!-- خلفية التطبيق (لون داكن فخم) -->
+        <item name="android:windowBackground">#0C1322</item>
+        
+        <!-- ألوان النصوص الافتراضية (أبيض عشان يبان على الخلفية الغامقة) -->
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#B0BEC5</item>
+
+        <!-- شريط الحالة (Status Bar) -->
+        <item name="android:statusBarColor">#121212</item>
+        <!-- شريط التنقل (Navigation Bar) -->
+        <item name="android:navigationBarColor">#121212</item>
+    </style>
+
+</resources>
