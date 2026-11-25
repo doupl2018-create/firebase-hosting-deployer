@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- منصة الرفع (قاعدة خضراء) -->
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M34,74h40a3,3 0,0 1,0 6h-40a3,3 0,0 1,0 -6z" />
+
+    <!-- شعلة Firebase الخلفية (برتقالي) -->
+    <path
+        android:fillColor="#FF9100"
+        android:pathData="M36,68L44,32L56,50Z" />
+
+    <!-- شعلة Firebase الأمامية (أصفر كهرماني) -->
+    <path
+        android:fillColor="#FFD000"
+        android:pathData="M36,68L68,40L74,68L54,71Z" />
+
+    <!-- سهم الرفع الصاعد (أبيض بإطار أخضر) -->
+    <path
+        android:fillColor="#00C853"
+        android:pathData="M54,26L70,46H60V68H48V46H38Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30L66,45H58.5V65H49.5V45H42Z" />
+
+</vector>
