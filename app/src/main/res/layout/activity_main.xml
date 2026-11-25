@@ -3,88 +3,378 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212"
-    android:padding="16dp">
+    android:background="#121212">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DH Firebase Deployer"
-        android:textColor="#00E676"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    <!-- زرار استيراد ملف مفاتيح فايربيس JSON -->
-    <Button
-        android:id="@+id/btnImportJson"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="1. اختيار ملف مفاتيح Firebase (.json)"
-        android:textSize="14sp"
-        android:backgroundTint="#37474F"
-        android:textColor="#FFFFFF" />
+        <Button
+            android:id="@+id/tabFirebase"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Firebase"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:backgroundTint="#00C853"
+            android:textColor="#000000"
+            android:layout_marginEnd="4dp" />
 
-    <TextView
-        android:id="@+id/tvAccountStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="حالة الحساب: غير متصل"
-        android:textColor="#FFAB40"
-        android:textSize="12sp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="12dp" />
+        <Button
+            android:id="@+id/tabGithub"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="GH"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:backgroundTint="#37474F"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="4dp" />
 
-    <!-- زرار استعراض فولدر public -->
-    <Button
-        android:id="@+id/btnBrowse"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="2. استعراض فولدر public"
-        android:textSize="15sp"
-        android:backgroundTint="#263238"
-        android:textColor="#FFFFFF" />
+        <Button
+            android:id="@+id/tabDrive"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Drive"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:backgroundTint="#37474F"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvFolderPath"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="الفولدر: لم يتم الاختيار بعد"
-        android:textColor="#B0BEC5"
-        android:textSize="12sp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp" />
-
-    <!-- زرار الرفع -->
-    <Button
-        android:id="@+id/btnUpload"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="رفع التحديثات الآن (Deploy)"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:backgroundTint="#00C853"
-        android:textColor="#000000" />
-
-    <!-- شاشة السجل -->
     <ScrollView
-        android:id="@+id/scrollLog"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="14dp"
-        android:background="#1E1E1E"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvLog"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="جاهز للعمل..."
-            android:textColor="#E0E0E0"
-            android:fontFamily="monospace"
-            android:textSize="12sp" />
-    </ScrollView>
+            android:orientation="vertical">
 
+            <!-- ===== Firebase ===== -->
+            <LinearLayout
+                android:id="@+id/layoutFirebase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DH Firebase Deployer"
+                    android:textColor="#00E676"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/btnImportJsonFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="1. اختيار ملف مفاتيح Firebase (.json)"
+                    android:textSize="14sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvAccountStatusFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="حالة الحساب: غير متصل"
+                    android:textColor="#FFAB40"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <Button
+                    android:id="@+id/btnBrowseFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="2. استعراض فولدر الموقع"
+                    android:textSize="15sp"
+                    android:backgroundTint="#263238"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvFolderPathFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="الفولدر: لم يتم الاختيار بعد"
+                    android:textColor="#B0BEC5"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/btnUploadFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="رفع على Firebase الان"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#00C853"
+                    android:textColor="#000000" />
+
+                <ScrollView
+                    android:id="@+id/scrollLogFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="14dp"
+                    android:background="#1E1E1E"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/tvLogFb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="جاهز للعمل..."
+                        android:textColor="#E0E0E0"
+                        android:fontFamily="monospace"
+                        android:textSize="12sp" />
+                </ScrollView>
+            </LinearLayout>
+
+            <!-- ===== GH ===== -->
+            <LinearLayout
+                android:id="@+id/layoutGithub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="رفع على GH"
+                    android:textColor="#00E676"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
+                <EditText
+                    android:id="@+id/etGithubToken"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="توكن GH (ghp_...)"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:inputType="textPassword"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/etGithubRepo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="الريبو: owner/repo او اللينك كامل"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/etGithubBranch"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="البرانش: main"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvGithubStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="حالة GH: غير مضبوط"
+                    android:textColor="#FFAB40"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btnSaveGithub"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="حفظ بيانات GH"
+                    android:textSize="15sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/btnBrowseGh"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="استعراض فولدر GH"
+                    android:textSize="15sp"
+                    android:backgroundTint="#263238"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:id="@+id/tvFolderPathGh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="الفولدر: لم يتم الاختيار بعد"
+                    android:textColor="#B0BEC5"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <Button
+                    android:id="@+id/btnUploadGithub"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="رفع على GH (المتعدل بس)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#24292F"
+                    android:textColor="#FFFFFF" />
+
+                <ScrollView
+                    android:id="@+id/scrollLogGh"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="14dp"
+                    android:background="#1E1E1E"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/tvLogGh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="جاهز للعمل..."
+                        android:textColor="#E0E0E0"
+                        android:fontFamily="monospace"
+                        android:textSize="12sp" />
+                </ScrollView>
+            </LinearLayout>
+
+            <!-- ===== Drive ===== -->
+            <LinearLayout
+                android:id="@+id/layoutDrive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="رفع على Google Drive"
+                    android:textColor="#00E676"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/btnImportJsonDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="1. اختيار ملف مفاتيح Drive (.json)"
+                    android:textSize="14sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvAccountStatusDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="حالة الحساب: غير متصل"
+                    android:textColor="#FFAB40"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <EditText
+                    android:id="@+id/etDriveFolderId"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="ID فولدر Google Drive"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="هات الـ ID من لينك الفولدر على درايف، اللي بعد folders/"
+                    android:textColor="#78909C"
+                    android:textSize="11sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btnSaveDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="حفظ بيانات Drive"
+                    android:textSize="15sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/btnBrowseDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="استعراض فولدر Drive"
+                    android:textSize="15sp"
+                    android:backgroundTint="#263238"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:id="@+id/tvFolderPathDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="الفولدر: لم يتم الاختيار بعد"
+                    android:textColor="#B0BEC5"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <Button
+                    android:id="@+id/btnUploadDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="رفع على Drive (المتعدل بس)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#0D47A1"
+                    android:textColor="#FFFFFF" />
+
+                <ScrollView
+                    android:id="@+id/scrollLogDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="14dp"
+                    android:background="#1E1E1E"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/tvLogDrive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="جاهز للعمل..."
+                        android:textColor="#E0E0E0"
+                        android:fontFamily="monospace"
+                        android:textSize="12sp" />
+                </ScrollView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
