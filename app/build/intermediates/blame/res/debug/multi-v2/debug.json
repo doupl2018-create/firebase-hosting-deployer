@@ -1,0 +1,58 @@
+{
+    "logs": [
+        {
+            "outputFile": "/storage/internal_new/project/Firebase_Up/app/build/intermediates/res/merged/debug/values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "/storage/internal_new/project/Firebase_Up/app/src/main/res/values/colors.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1",
+                        "startColumns": "-1,-1,-1",
+                        "startOffsets": "-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,101,148",
+                        "endColumns": "45,46,50",
+                        "endOffsets": "96,143,194"
+                    }
+                },
+                {
+                    "source": "/storage/internal_new/project/Firebase_Up/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "-1",
+                        "startColumns": "-1",
+                        "startOffsets": "-1"
+                    },
+                    "to": {
+                        "startLines": "5",
+                        "startColumns": "4",
+                        "startOffsets": "199",
+                        "endColumns": "48",
+                        "endOffsets": "243"
+                    }
+                },
+                {
+                    "source": "/storage/internal_new/project/Firebase_Up/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "56",
+                        "endLines": "20",
+                        "endColumns": "12",
+                        "endOffsets": "899"
+                    },
+                    "to": {
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "248",
+                        "endLines": "23",
+                        "endColumns": "12",
+                        "endOffsets": "1091"
+                    }
+                }
+            ]
+        }
+    ]
+}
