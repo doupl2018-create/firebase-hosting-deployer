@@ -1,4 +1,4 @@
-#Thu Nov 26 06:54:16 UTC 2026
+#Thu Nov 26 10:59:41 UTC 2026
 base.0=/storage/internal_new/project/Firebase_Up/app/build/intermediates/dex/debug/mergeProjectDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
