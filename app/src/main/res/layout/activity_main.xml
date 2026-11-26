@@ -24,7 +24,7 @@
             android:layout_marginEnd="4dp" />
 
         <Button
-            android:id="@+id/tabGithub"
+            android:id="@+id/tabGh"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ===== Firebase ===== -->
+            <!-- Firebase -->
             <LinearLayout
                 android:id="@+id/layoutFirebase"
                 android:layout_width="match_parent"
@@ -140,9 +140,9 @@
                 </ScrollView>
             </LinearLayout>
 
-            <!-- ===== GH ===== -->
+            <!-- GH -->
             <LinearLayout
-                android:id="@+id/layoutGithub"
+                android:id="@+id/layoutGh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -159,7 +159,7 @@
                     android:layout_marginBottom="16dp" />
 
                 <EditText
-                    android:id="@+id/etGithubToken"
+                    android:id="@+id/etGhToken"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="توكن GH (ghp_...)"
@@ -171,7 +171,7 @@
                     android:textSize="13sp" />
 
                 <EditText
-                    android:id="@+id/etGithubRepo"
+                    android:id="@+id/etGhRepo"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="الريبو: owner/repo او اللينك كامل"
@@ -183,7 +183,7 @@
                     android:textSize="13sp" />
 
                 <EditText
-                    android:id="@+id/etGithubBranch"
+                    android:id="@+id/etGhBranch"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="البرانش: main"
@@ -195,7 +195,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/tvGithubStatus"
+                    android:id="@+id/tvGhStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="حالة GH: غير مضبوط"
@@ -205,7 +205,7 @@
                     android:layout_marginBottom="8dp" />
 
                 <Button
-                    android:id="@+id/btnSaveGithub"
+                    android:id="@+id/btnSaveGh"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:text="حفظ بيانات GH"
@@ -234,7 +234,7 @@
                     android:layout_marginBottom="12dp" />
 
                 <Button
-                    android:id="@+id/btnUploadGithub"
+                    android:id="@+id/btnUploadGh"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:text="رفع على GH (المتعدل بس)"
@@ -261,7 +261,7 @@
                 </ScrollView>
             </LinearLayout>
 
-            <!-- ===== Drive ===== -->
+            <!-- Drive - نظام تسجيل الدخول الجديد -->
             <LinearLayout
                 android:id="@+id/layoutDrive"
                 android:layout_width="match_parent"
@@ -279,14 +279,60 @@
                     android:gravity="center"
                     android:layout_marginBottom="16dp" />
 
-                <Button
-                    android:id="@+id/btnImportJsonDrive"
+                <EditText
+                    android:id="@+id/etDriveClientId"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:text="1. اختيار ملف مفاتيح Drive (.json)"
+                    android:hint="Client ID بتاع جوجل"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etDriveClientSecret"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Client Secret بتاع جوجل"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnGetDriveCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="1. هات كود تسجيل الدخول"
                     android:textSize="14sp"
-                    android:backgroundTint="#37474F"
-                    android:textColor="#FFFFFF" />
+                    android:backgroundTint="#0D47A1"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="8dp" />
+
+                <EditText
+                    android:id="@+id/etDriveAuthCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="الصق الكود هنا"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#78909C"
+                    android:background="#1E1E1E"
+                    android:padding="10dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnExchangeDriveCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="2. تسجيل دخول بحسابك"
+                    android:textSize="14sp"
+                    android:backgroundTint="#00C853"
+                    android:textColor="#000000"
+                    android:layout_marginTop="8dp" />
 
                 <TextView
                     android:id="@+id/tvAccountStatusDrive"
@@ -295,8 +341,8 @@
                     android:text="حالة الحساب: غير متصل"
                     android:textColor="#FFAB40"
                     android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
 
                 <EditText
                     android:id="@+id/etDriveFolderId"
@@ -309,15 +355,6 @@
                     android:padding="10dp"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="هات الـ ID من لينك الفولدر على درايف، اللي بعد folders/"
-                    android:textColor="#78909C"
-                    android:textSize="11sp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="8dp" />
-
                 <Button
                     android:id="@+id/btnSaveDrive"
                     android:layout_width="match_parent"
@@ -325,7 +362,8 @@
                     android:text="حفظ بيانات Drive"
                     android:textSize="15sp"
                     android:backgroundTint="#37474F"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="8dp" />
 
                 <Button
                     android:id="@+id/btnBrowseDrive"
