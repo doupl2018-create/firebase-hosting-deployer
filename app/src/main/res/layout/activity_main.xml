@@ -136,8 +136,21 @@
                         android:text="جاهز للعمل..."
                         android:textColor="#E0E0E0"
                         android:fontFamily="monospace"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textIsSelectable="true"
+                        android:focusable="true"
+                        android:longClickable="true" />
                 </ScrollView>
+
+                <Button
+                    android:id="@+id/btnCopyFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="نسخ سجل Firebase"
+                    android:textSize="14sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
 
             <!-- GH -->
@@ -257,8 +270,21 @@
                         android:text="جاهز للعمل..."
                         android:textColor="#E0E0E0"
                         android:fontFamily="monospace"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textIsSelectable="true"
+                        android:focusable="true"
+                        android:longClickable="true" />
                 </ScrollView>
+
+                <Button
+                    android:id="@+id/btnCopyGh"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="نسخ سجل GH"
+                    android:textSize="14sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
 
             <!-- Drive - نظام تسجيل الدخول الجديد -->
@@ -409,8 +435,21 @@
                         android:text="جاهز للعمل..."
                         android:textColor="#E0E0E0"
                         android:fontFamily="monospace"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textIsSelectable="true"
+                        android:focusable="true"
+                        android:longClickable="true" />
                 </ScrollView>
+
+                <Button
+                    android:id="@+id/btnCopyDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="نسخ سجل Drive"
+                    android:textSize="14sp"
+                    android:backgroundTint="#37474F"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
 
         </LinearLayout>
