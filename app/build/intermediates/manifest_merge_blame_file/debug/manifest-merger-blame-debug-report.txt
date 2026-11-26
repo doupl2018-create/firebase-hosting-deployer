@@ -22,41 +22,50 @@
 14    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 14-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:8:5-81
 14-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:8:22-78
-15
-16    <application
-16-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:10:5-26:19
-17        android:allowBackup="true"
-17-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:11:9-35
-18        android:debuggable="true"
-19        android:icon="@mipmap/ic_launcher"
-19-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:12:9-43
-20        android:label="DH Trinity"
-20-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:13:9-35
-21        android:roundIcon="@mipmap/ic_launcher_round"
-21-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:14:9-54
-22        android:supportsRtl="true"
-22-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:15:9-35
-23        android:theme="@android:style/Theme.Material.Light.NoActionBar"
-23-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:16:9-72
-24        android:usesCleartextTraffic="true" >
-24-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:17:9-44
-25        <activity
-25-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:18:9-25:20
-26            android:name="com.dhautomation.firebasedeploy.MainActivity"
-26-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:19:13-41
-27            android:exported="true" >
-27-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:20:13-36
-28            <intent-filter>
-28-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:21:13-24:29
-29                <action android:name="android.intent.action.MAIN" />
-29-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:22:17-69
-29-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:22:25-66
-30
-31                <category android:name="android.intent.category.LAUNCHER" />
-31-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:23:17-77
-31-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:23:27-74
-32            </intent-filter>
-33        </activity>
-34    </application>
-35
-36</manifest>
+15    <uses-permission android:name="android.permission.WAKE_LOCK" />
+15-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:9:5-68
+15-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:9:22-65
+16    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+16-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:10:5-77
+16-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:10:22-74
+17    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+17-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:11:5-77
+17-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:11:22-74
+18
+19    <application
+19-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:13:5-29:19
+20        android:allowBackup="true"
+20-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:14:9-35
+21        android:debuggable="true"
+22        android:icon="@mipmap/ic_launcher"
+22-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:15:9-43
+23        android:label="DH Trinity"
+23-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:16:9-35
+24        android:roundIcon="@mipmap/ic_launcher_round"
+24-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:17:9-54
+25        android:supportsRtl="true"
+25-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:18:9-35
+26        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+26-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:19:9-72
+27        android:usesCleartextTraffic="true" >
+27-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:20:9-44
+28        <activity
+28-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:21:9-28:20
+29            android:name="com.dhautomation.firebasedeploy.MainActivity"
+29-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:22:13-41
+30            android:exported="true" >
+30-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:23:13-36
+31            <intent-filter>
+31-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:24:13-27:29
+32                <action android:name="android.intent.action.MAIN" />
+32-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:25:17-69
+32-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:25:25-66
+33
+34                <category android:name="android.intent.category.LAUNCHER" />
+34-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:26:17-77
+34-->/storage/internal_new/project/Firebase_Up/app/src/main/AndroidManifest.xml:26:27-74
+35            </intent-filter>
+36        </activity>
+37    </application>
+38
+39</manifest>
