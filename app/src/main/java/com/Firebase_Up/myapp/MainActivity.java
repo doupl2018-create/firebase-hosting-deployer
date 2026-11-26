@@ -41,7 +41,6 @@ public class MainActivity extends Activity {
     private static final int REQ_PICK_JSON_FB = 1002;
     private static final int REQ_PICK_FOLDER_GH = 1003;
     private static final int REQ_PICK_FOLDER_DRIVE = 1004;
-    private static final int REQ_PICK_JSON_DRIVE = 1005;
 
     private Uri folderFb;
     private String siteId = "";
@@ -61,13 +60,15 @@ public class MainActivity extends Activity {
     private Button btnSaveGh, btnBrowseGh, btnUploadGh;
 
     private Uri folderDrive;
-    private String clientEmailDrive = "";
-    private String privateKeyDrive = "";
     private String driveFolderId = "";
+    private String driveAccessToken = "";
+    private String driveRefreshToken = "";
+    private String driveClientId = "";
+    private String driveClientSecret = "";
     private TextView tvAccountStatusDrive, tvFolderPathDrive, tvLogDrive;
-    private EditText etDriveFolderId;
+    private EditText etDriveFolderId, etDriveClientId, etDriveClientSecret, etDriveAuthCode;
     private ScrollView scrollLogDrive;
-    private Button btnImportJsonDrive, btnSaveDrive, btnBrowseDrive, btnUploadDrive;
+    private Button btnGetDriveCode, btnExchangeDriveCode, btnSaveDrive, btnBrowseDrive, btnUploadDrive;
 
     private LinearLayout layoutFirebase, layoutGh, layoutDrive;
     private Button tabFirebase, tabGh, tabDrive;
@@ -90,27 +91,23 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         prefs = getSharedPreferences("dh_firebase_deploy", MODE_PRIVATE);
 
         tabFirebase = findViewById(R.id.tabFirebase);
-        tabGh = findViewById(R.id.tabGithub);
+        tabGh = findViewById(R.id.tabGh);
         tabDrive = findViewById(R.id.tabDrive);
         layoutFirebase = findViewById(R.id.layoutFirebase);
-        layoutGh = findViewById(R.id.layoutGithub);
+        layoutGh = findViewById(R.id.layoutGh);
         layoutDrive = findViewById(R.id.layoutDrive);
 
         tabFirebase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showTab(0); }
+            @Override public void onClick(View v) { showTab(0); }
         });
         tabGh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showTab(1); }
+            @Override public void onClick(View v) { showTab(1); }
         });
         tabDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showTab(2); }
+            @Override public void onClick(View v) { showTab(2); }
         });
 
         tvAccountStatusFb = findViewById(R.id.tvAccountStatusFb);
@@ -121,23 +118,27 @@ public class MainActivity extends Activity {
         btnBrowseFb = findViewById(R.id.btnBrowseFb);
         btnUploadFb = findViewById(R.id.btnUploadFb);
 
-        etGhToken = findViewById(R.id.etGithubToken);
-        etGhRepo = findViewById(R.id.etGithubRepo);
-        etGhBranch = findViewById(R.id.etGithubBranch);
-        tvGhStatus = findViewById(R.id.tvGithubStatus);
+        etGhToken = findViewById(R.id.etGhToken);
+        etGhRepo = findViewById(R.id.etGhRepo);
+        etGhBranch = findViewById(R.id.etGhBranch);
+        tvGhStatus = findViewById(R.id.tvGhStatus);
         tvFolderPathGh = findViewById(R.id.tvFolderPathGh);
         tvLogGh = findViewById(R.id.tvLogGh);
         scrollLogGh = findViewById(R.id.scrollLogGh);
-        btnSaveGh = findViewById(R.id.btnSaveGithub);
+        btnSaveGh = findViewById(R.id.btnSaveGh);
         btnBrowseGh = findViewById(R.id.btnBrowseGh);
-        btnUploadGh = findViewById(R.id.btnUploadGithub);
+        btnUploadGh = findViewById(R.id.btnUploadGh);
 
         tvAccountStatusDrive = findViewById(R.id.tvAccountStatusDrive);
         tvFolderPathDrive = findViewById(R.id.tvFolderPathDrive);
         tvLogDrive = findViewById(R.id.tvLogDrive);
         scrollLogDrive = findViewById(R.id.scrollLogDrive);
         etDriveFolderId = findViewById(R.id.etDriveFolderId);
-        btnImportJsonDrive = findViewById(R.id.btnImportJsonDrive);
+        etDriveClientId = findViewById(R.id.etDriveClientId);
+        etDriveClientSecret = findViewById(R.id.etDriveClientSecret);
+        etDriveAuthCode = findViewById(R.id.etDriveAuthCode);
+        btnGetDriveCode = findViewById(R.id.btnGetDriveCode);
+        btnExchangeDriveCode = findViewById(R.id.btnExchangeDriveCode);
         btnSaveDrive = findViewById(R.id.btnSaveDrive);
         btnBrowseDrive = findViewById(R.id.btnBrowseDrive);
         btnUploadDrive = findViewById(R.id.btnUploadDrive);
@@ -145,8 +146,7 @@ public class MainActivity extends Activity {
         loadSavedSettings();
 
         btnImportJsonFb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
@@ -154,36 +154,27 @@ public class MainActivity extends Activity {
             }
         });
         btnBrowseFb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivityForResult(intent, REQ_PICK_FOLDER_FB);
             }
         });
         btnUploadFb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (siteId.isEmpty() || clientEmailFb.isEmpty() || privateKeyFb.isEmpty()) {
-                    logFb("خطأ: اختار ملف مفاتيح فايربيس الاول!");
-                    return;
-                }
-                if (folderFb == null) { logFb("خطأ: اختار فولدر فايربيس الاول!"); return; }
+            @Override public void onClick(View v) {
+                if (siteId.isEmpty() || clientEmailFb.isEmpty() || privateKeyFb.isEmpty()) { logFb("اختار ملف مفاتيح فايربيس الاول!"); return; }
+                if (folderFb == null) { logFb("اختار فولدر فايربيس الاول!"); return; }
                 startDeployProcess();
             }
         });
 
         btnSaveGh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 ghToken = etGhToken.getText().toString().trim();
                 ghRepo = normalizeGhRepo(etGhRepo.getText().toString().trim());
                 String b = etGhBranch.getText().toString().trim();
                 if (!b.isEmpty()) ghBranch = b; else ghBranch = "main";
-                if (ghToken.isEmpty() || ghRepo.isEmpty() || !ghRepo.contains("/")) {
-                    logGh("بيانات GH غير كاملة");
-                    return;
-                }
+                if (ghToken.isEmpty() || ghRepo.isEmpty() || !ghRepo.contains("/")) { logGh("بيانات GH غير كاملة"); return; }
                 etGhRepo.setText(ghRepo);
                 prefs.edit().putString("gh_token", ghToken).putString("gh_repo", ghRepo).putString("gh_branch", ghBranch).apply();
                 tvGhStatus.setText("متصل بـ GH: " + ghRepo + " (" + ghBranch + ")");
@@ -192,34 +183,70 @@ public class MainActivity extends Activity {
             }
         });
         btnBrowseGh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivityForResult(intent, REQ_PICK_FOLDER_GH);
             }
         });
         btnUploadGh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 if (ghToken.isEmpty() || ghRepo.isEmpty()) { logGh("احفظ بيانات GH الاول!"); return; }
                 if (folderGh == null) { logGh("اختار فولدر GH الاول!"); return; }
                 startGhUpload();
             }
         });
 
-        btnImportJsonDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                startActivityForResult(intent, REQ_PICK_JSON_DRIVE);
+        btnGetDriveCode.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                String cid = etDriveClientId.getText().toString().trim();
+                if (cid.isEmpty()) { logDrive("حط Client ID الاول"); return; }
+                prefs.edit().putString("drive_client_id", cid).putString("drive_client_secret", etDriveClientSecret.getText().toString().trim()).apply();
+                String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + cid + "&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&scope=https://www.googleapis.com/auth/drive.file&access_type=offline&prompt=select_account";
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(i);
+                logDrive("اختار ايميلك ووافق، وبعدين انسخ الكود والصقه هنا");
+            }
+        });
+        btnExchangeDriveCode.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                final String code = etDriveAuthCode.getText().toString().trim();
+                final String cid = etDriveClientId.getText().toString().trim();
+                final String secret = etDriveClientSecret.getText().toString().trim();
+                if (code.isEmpty() || cid.isEmpty() || secret.isEmpty()) { logDrive("كمل الـ 3 خانات الاول"); return; }
+                new Thread(new Runnable() {
+                    @Override public void run() {
+                        try {
+                            logDrive("جارى تحويل الكود لتوكن...");
+                            String post = "code=" + URLEncoder.encode(code, "UTF-8") + "&client_id=" + URLEncoder.encode(cid, "UTF-8") + "&client_secret=" + URLEncoder.encode(secret, "UTF-8") + "&redirect_uri=" + URLEncoder.encode("urn:ietf:wg:oauth:2.0:oob", "UTF-8") + "&grant_type=authorization_code";
+                            URL url = new URL("https://oauth2.googleapis.com/token");
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setRequestMethod("POST");
+                            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            conn.setDoOutput(true);
+                            OutputStream os = conn.getOutputStream();
+                            try { os.write(post.getBytes(StandardCharsets.UTF_8)); } finally { os.close(); }
+                            int c = conn.getResponseCode();
+                            String resp = readStreamString(c >= 200 && c < 300 ? conn.getInputStream() : conn.getErrorStream());
+                            if (c < 200 || c >= 300) throw new Exception(resp);
+                            JSONObject o = new JSONObject(resp);
+                            driveAccessToken = o.getString("access_token");
+                            if (o.has("refresh_token")) driveRefreshToken = o.getString("refresh_token");
+                            prefs.edit().putString("drive_access_token", driveAccessToken).putString("drive_refresh_token", driveRefreshToken).putString("drive_client_id", cid).putString("drive_client_secret", secret).apply();
+                            logDrive("تم تسجيل الدخول بحسابك بنجاح، دلوقتي دوس رفع");
+                            runOnUiThread(new Runnable() {
+                                @Override public void run() {
+                                    tvAccountStatusDrive.setText("متصل بحسابك الشخصي");
+                                    tvAccountStatusDrive.setTextColor(0xFF00E676);
+                                }
+                            });
+                        } catch (Exception e) { logDrive("فشل تسجيل الدخول: " + e.getMessage()); }
+                    }
+                }).start();
             }
         });
         btnSaveDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 driveFolderId = extractDriveFolderId(etDriveFolderId.getText().toString().trim());
                 if (driveFolderId.isEmpty()) { logDrive("اكتب ID فولدر Drive الاول"); return; }
                 etDriveFolderId.setText(driveFolderId);
@@ -228,17 +255,15 @@ public class MainActivity extends Activity {
             }
         });
         btnBrowseDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivityForResult(intent, REQ_PICK_FOLDER_DRIVE);
             }
         });
         btnUploadDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clientEmailDrive.isEmpty() || privateKeyDrive.isEmpty()) { logDrive("اختار ملف مفاتيح Drive الاول!"); return; }
+            @Override public void onClick(View v) {
+                if (driveAccessToken.isEmpty()) { logDrive("سجل دخول الاول"); return; }
                 if (driveFolderId.isEmpty()) { logDrive("احفظ ID فولدر Drive الاول!"); return; }
                 if (folderDrive == null) { logDrive("اختار فولدر Drive الاول!"); return; }
                 startDriveUpload();
@@ -258,6 +283,9 @@ public class MainActivity extends Activity {
         tabFirebase.setTextColor(tab == 0 ? 0xFF000000 : 0xFFFFFFFF);
         tabGh.setTextColor(tab == 1 ? 0xFF000000 : 0xFFFFFFFF);
         tabDrive.setTextColor(tab == 2 ? 0xFF000000 : 0xFFFFFFFF);
+        if (tab == 0) scrollLogFb.post(new Runnable() { @Override public void run() { scrollLogFb.fullScroll(View.FOCUS_DOWN); } });
+        else if (tab == 1) scrollLogGh.post(new Runnable() { @Override public void run() { scrollLogGh.fullScroll(View.FOCUS_DOWN); } });
+        else if (tab == 2) scrollLogDrive.post(new Runnable() { @Override public void run() { scrollLogDrive.fullScroll(View.FOCUS_DOWN); } });
     }
 
     private String normalizeGhRepo(String input) {
@@ -265,15 +293,10 @@ public class MainActivity extends Activity {
         String s = input.trim();
         if (s.endsWith(".git")) s = s.substring(0, s.length() - 4);
         while (s.endsWith("/")) s = s.substring(0, s.length() - 1);
-        if (s.contains("github.com/")) {
-            s = s.substring(s.indexOf("github.com/") + "github.com/".length());
-        } else if (s.contains("github.com:")) {
-            s = s.substring(s.indexOf("github.com:") + "github.com:".length());
-        }
+        if (s.contains(" github.com/")) s = s.substring(s.indexOf(" github.com/") + " github.com/".length());
+        else if (s.contains(" github.com:")) s = s.substring(s.indexOf(" github.com:") + " github.com:".length());
         String[] parts = s.split("/");
-        if (parts.length >= 2) {
-            s = parts[0] + "/" + parts[1];
-        }
+        if (parts.length >= 2) s = parts[0] + "/" + parts[1];
         return s.trim();
     }
 
@@ -299,10 +322,7 @@ public class MainActivity extends Activity {
             tvAccountStatusFb.setTextColor(0xFF00E676);
         }
         String uriFb = prefs.getString("fb_folder_uri", null);
-        if (uriFb != null) {
-            folderFb = Uri.parse(uriFb);
-            tvFolderPathFb.setText("الفولدر المحفوظ: " + folderFb.getLastPathSegment());
-        }
+        if (uriFb != null) { folderFb = Uri.parse(uriFb); tvFolderPathFb.setText("الفولدر المحفوظ: " + folderFb.getLastPathSegment()); }
         ghToken = prefs.getString("gh_token", "");
         ghRepo = normalizeGhRepo(prefs.getString("gh_repo", ""));
         ghBranch = prefs.getString("gh_branch", "main");
@@ -314,23 +334,21 @@ public class MainActivity extends Activity {
             tvGhStatus.setTextColor(0xFF00E676);
         }
         String uriGh = prefs.getString("gh_folder_uri", null);
-        if (uriGh != null) {
-            folderGh = Uri.parse(uriGh);
-            tvFolderPathGh.setText("الفولدر المحفوظ: " + folderGh.getLastPathSegment());
-        }
-        clientEmailDrive = prefs.getString("drive_client_email", "");
-        privateKeyDrive = prefs.getString("drive_private_key", "");
+        if (uriGh != null) { folderGh = Uri.parse(uriGh); tvFolderPathGh.setText("الفولدر المحفوظ: " + folderGh.getLastPathSegment()); }
+        driveClientId = prefs.getString("drive_client_id", "");
+        driveClientSecret = prefs.getString("drive_client_secret", "");
+        driveAccessToken = prefs.getString("drive_access_token", "");
+        driveRefreshToken = prefs.getString("drive_refresh_token", "");
         driveFolderId = prefs.getString("drive_folder_id", "");
-        if (!clientEmailDrive.isEmpty()) {
-            tvAccountStatusDrive.setText("متصل بحساب Drive: " + clientEmailDrive);
+        if (!driveClientId.isEmpty()) etDriveClientId.setText(driveClientId);
+        if (!driveClientSecret.isEmpty()) etDriveClientSecret.setText(driveClientSecret);
+        if (!driveAccessToken.isEmpty()) {
+            tvAccountStatusDrive.setText("متصل بحسابك الشخصي");
             tvAccountStatusDrive.setTextColor(0xFF00E676);
         }
         if (!driveFolderId.isEmpty()) etDriveFolderId.setText(driveFolderId);
         String uriDrive = prefs.getString("drive_folder_uri", null);
-        if (uriDrive != null) {
-            folderDrive = Uri.parse(uriDrive);
-            tvFolderPathDrive.setText("الفولدر المحفوظ: " + folderDrive.getLastPathSegment());
-        }
+        if (uriDrive != null) { folderDrive = Uri.parse(uriDrive); tvFolderPathDrive.setText("الفولدر المحفوظ: " + folderDrive.getLastPathSegment()); }
     }
 
     @Override
@@ -348,15 +366,6 @@ public class MainActivity extends Activity {
                 tvAccountStatusFb.setText("متصل بالمشروع: " + siteId);
                 tvAccountStatusFb.setTextColor(0xFF00E676);
                 logFb("تم حفظ بيانات مشروع (" + siteId + ") بنجاح.");
-            } else if (requestCode == REQ_PICK_JSON_DRIVE) {
-                byte[] jsonBytes = readUriBytes(getContentResolver(), data.getData());
-                JSONObject obj = new JSONObject(new String(jsonBytes, StandardCharsets.UTF_8));
-                clientEmailDrive = obj.getString("client_email");
-                privateKeyDrive = obj.getString("private_key");
-                prefs.edit().putString("drive_client_email", clientEmailDrive).putString("drive_private_key", privateKeyDrive).apply();
-                tvAccountStatusDrive.setText("متصل بحساب Drive: " + clientEmailDrive);
-                tvAccountStatusDrive.setTextColor(0xFF00E676);
-                logDrive("تم حفظ بيانات Drive. اعمل شير لفولدر Drive للايميل ده.");
             } else if (requestCode == REQ_PICK_FOLDER_FB) {
                 folderFb = data.getData();
                 getContentResolver().takePersistableUriPermission(folderFb, Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -376,17 +385,14 @@ public class MainActivity extends Activity {
                 tvFolderPathDrive.setText("الفولدر المحفوظ: " + folderDrive.getLastPathSegment());
                 logDrive("تم حفظ مسار فولدر Drive بنجاح.");
             }
-        } catch (Exception e) {
-            logFb("خطأ: " + e.getMessage());
-        }
+        } catch (Exception e) { logFb("خطأ: " + e.getMessage()); }
     }
 
     private void startDeployProcess() {
         btnUploadFb.setEnabled(false);
         tvLogFb.setText("بدء عملية النشر...\n");
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     logFb("1. فحص وضغط الملفات...");
                     Map<String, FileItem> filesMap = new HashMap<String, FileItem>();
@@ -403,8 +409,7 @@ public class MainActivity extends Activity {
                     JSONObject filesJson = new JSONObject();
                     Map<String, FileItem> hashToItem = new HashMap<String, FileItem>();
                     for (FileItem item : filesMap.values()) { filesJson.put(item.webPath, item.sha256); hashToItem.put(item.sha256, item); }
-                    JSONObject populateBody = new JSONObject();
-                    populateBody.put("files", filesJson);
+                    JSONObject populateBody = new JSONObject(); populateBody.put("files", filesJson);
                     String populateUrl = "https://firebasehosting.googleapis.com/v1beta1/" + versionName + ":populateFiles";
                     String popResp = httpJsonRequest("POST", populateUrl, accessToken, populateBody.toString());
                     JSONObject popObj = new JSONObject(popResp);
@@ -417,23 +422,15 @@ public class MainActivity extends Activity {
                             FileItem item = hashToItem.get(hash);
                             if (item != null) { logFb("رفع: " + item.webPath); uploadGzippedFile(uploadUrlBase + "/" + hash, accessToken, item.gzippedData); }
                         }
-                    } else {
-                        logFb("كل الملفات محدثة بالفعل!");
-                    }
+                    } else logFb("كل الملفات محدثة بالفعل!");
                     logFb("5. اعتماد الاصدار...");
                     String finalizeUrl = "https://firebasehosting.googleapis.com/v1beta1/" + versionName + "?updateMask=status";
                     httpJsonRequest("PATCH", finalizeUrl, accessToken, "{\"status\":\"FINALIZED\"}");
                     String releaseUrl = "https://firebasehosting.googleapis.com/v1beta1/sites/" + siteId + "/releases?versionName=" + versionName;
                     httpJsonRequest("POST", releaseUrl, accessToken, "{}");
                     logFb("تم النشر بنجاح على: https://" + siteId + ".web.app");
-                } catch (Exception e) {
-                    logFb("خطأ: " + e.getMessage());
-                } finally {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() { btnUploadFb.setEnabled(true); }
-                    });
-                }
+                } catch (Exception e) { logFb("خطأ: " + e.getMessage()); }
+                finally { runOnUiThread(new Runnable() { @Override public void run() { btnUploadFb.setEnabled(true); } }); }
             }
         }).start();
     }
@@ -442,31 +439,40 @@ public class MainActivity extends Activity {
         btnUploadGh.setEnabled(false);
         tvLogGh.setText("بدء الرفع على GH...\n");
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
+                int uploaded = 0; int skipped = 0; int failed = 0;
                 try {
                     logGh("1. قراءة ملفات الفولدر...");
                     Map<String, FileItem> filesMap = new HashMap<String, FileItem>();
                     String rootDocId = DocumentsContract.getTreeDocumentId(folderGh);
                     scanFolderRecursive(folderGh, rootDocId, "", filesMap);
                     logGh("اجمالي الملفات: " + filesMap.size());
+                    if (filesMap.isEmpty()) { logGh("لا يوجد ملفات!"); logGh("===== لم يتم رفع اي ملف ====="); return; }
                     logGh("2. مقارنة ورفع المتعدل بس...");
-                    int uploaded = 0;
-                    int skipped = 0;
                     int count = 0;
                     for (Map.Entry<String, FileItem> entry : filesMap.entrySet()) {
                         String ghPath = entry.getValue().webPath.startsWith("/") ? entry.getValue().webPath.substring(1) : entry.getValue().webPath;
                         count++;
-                        boolean did = uploadOneFileToGhIfChanged(ghPath, entry.getValue().rawData, count, filesMap.size());
-                        if (did) uploaded++; else skipped++;
+                        try {
+                            boolean did = uploadOneFileToGhIfChanged(ghPath, entry.getValue().rawData, count, filesMap.size());
+                            if (did) uploaded++; else skipped++;
+                        } catch (Exception oneErr) { failed++; logGh("فشل في ملف: " + ghPath + " - " + oneErr.getMessage()); }
                     }
-                    logGh("خلصنا: اترفع " + uploaded + " - اتخطى " + skipped);
-                } catch (Exception e) {
-                    logGh("خطأ GH: " + e.getMessage());
-                } finally {
+                    logGh("--------------------------------");
+                    logGh("خلصنا GH");
+                    logGh("اترفع: " + uploaded);
+                    logGh("اتخطى: " + skipped);
+                    logGh("فشل: " + failed);
+                    if (failed == 0) logGh("===== تم الرفع بنجاح بالكامل =====");
+                    else logGh("===== خلص بس فيه " + failed + " ملف فشل =====");
+                } catch (Exception e) { logGh("خطأ عام في GH: " + e.getMessage()); logGh("===== الرفع لم يكتمل ====="); }
+                finally {
+                    final int u = uploaded; final int s = skipped; final int f = failed;
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() { btnUploadGh.setEnabled(true); }
+                        @Override public void run() {
+                            btnUploadGh.setEnabled(true);
+                            android.widget.Toast.makeText(MainActivity.this, "خلصنا GH: اترفع " + u + " - اتخطى " + s + " - فشل " + f, android.widget.Toast.LENGTH_LONG).show();
+                        }
                     });
                 }
             }
@@ -480,10 +486,7 @@ public class MainActivity extends Activity {
         String newBase64 = Base64.encodeToString(rawData, Base64.NO_WRAP);
         if (old != null && old.contentBase64 != null) {
             String oldClean = old.contentBase64.replaceAll("\\s+", "");
-            if (oldClean.equals(newBase64)) {
-                logGh("تخطي: " + ghPath);
-                return false;
-            }
+            if (oldClean.equals(newBase64)) { logGh("تخطي: " + ghPath); return false; }
             logGh("تحديث: " + ghPath);
             doPutGhFile(urlStr, ghPath, newBase64, old.sha);
             return true;
@@ -509,11 +512,7 @@ public class MainActivity extends Activity {
         conn.setRequestProperty("X-GitHub-Api-Version", "2022-11-28");
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        try {
-            os.write(body.toString().getBytes(StandardCharsets.UTF_8));
-        } finally {
-            os.close();
-        }
+        try { os.write(body.toString().getBytes(StandardCharsets.UTF_8)); } finally { os.close(); }
         int code = conn.getResponseCode();
         InputStream is = (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream();
         String resp = readStreamString(is);
@@ -551,26 +550,53 @@ public class MainActivity extends Activity {
         return sb.toString();
     }
 
+    private String getValidDriveToken() throws Exception {
+        try {
+            URL url = new URL("https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id)");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + driveAccessToken);
+            int code = conn.getResponseCode();
+            if (code == 200) return driveAccessToken;
+        } catch (Exception ignored) {}
+        if (driveRefreshToken.isEmpty()) return driveAccessToken;
+        logDrive("التوكن انتهى، جارى تجديده...");
+        String post = "client_id=" + URLEncoder.encode(driveClientId, "UTF-8") + "&client_secret=" + URLEncoder.encode(driveClientSecret, "UTF-8") + "&refresh_token=" + URLEncoder.encode(driveRefreshToken, "UTF-8") + "&grant_type=refresh_token";
+        URL url = new URL("https://oauth2.googleapis.com/token");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        try { os.write(post.getBytes(StandardCharsets.UTF_8)); } finally { os.close(); }
+        int c = conn.getResponseCode();
+        String resp = readStreamString(c >= 200 && c < 300 ? conn.getInputStream() : conn.getErrorStream());
+        if (c < 200 || c >= 300) throw new Exception("فشل تجديد التوكن: " + resp);
+        JSONObject o = new JSONObject(resp);
+        driveAccessToken = o.getString("access_token");
+        prefs.edit().putString("drive_access_token", driveAccessToken).apply();
+        logDrive("تم تجديد التوكن بنجاح");
+        return driveAccessToken;
+    }
+
     private void startDriveUpload() {
         btnUploadDrive.setEnabled(false);
         tvLogDrive.setText("بدء الرفع على Drive...\n");
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
+                    if (driveAccessToken.isEmpty()) { logDrive("سجل دخول الاول"); return; }
                     logDrive("1. قراءة ملفات الفولدر...");
                     Map<String, FileItem> filesMap = new HashMap<String, FileItem>();
                     String rootDocId = DocumentsContract.getTreeDocumentId(folderDrive);
                     scanFolderRecursive(folderDrive, rootDocId, "", filesMap);
                     logDrive("اجمالي الملفات: " + filesMap.size());
-                    logDrive("2. المصادقة مع Drive...");
-                    String token = getGoogleAccessToken(clientEmailDrive, privateKeyDrive, "https://www.googleapis.com/auth/drive.file");
+                    String token = getValidDriveToken();
+                    logDrive("2. التأكد من التوكن...");
                     logDrive("3. جلب ملفات Drive الموجودة...");
                     Map<String, JSONObject> existing = listDriveFiles(token, driveFolderId);
                     logDrive("موجود على Drive: " + existing.size());
-                    int uploaded = 0;
-                    int skipped = 0;
-                    int count = 0;
+                    int uploaded = 0; int skipped = 0; int count = 0;
                     for (Map.Entry<String, FileItem> entry : filesMap.entrySet()) {
                         String name = entry.getValue().webPath.startsWith("/") ? entry.getValue().webPath.substring(1) : entry.getValue().webPath;
                         String driveName = name.replace("/", "__");
@@ -579,30 +605,17 @@ public class MainActivity extends Activity {
                         JSONObject old = existing.get(driveName);
                         if (old != null) {
                             String oldMd5 = old.optString("md5Checksum", "");
-                            if (oldMd5.equals(localMd5)) {
-                                logDrive("تخطي: " + name);
-                                skipped++;
-                                continue;
-                            } else {
-                                logDrive("تحديث: " + name);
-                                updateDriveFile(token, old.getString("id"), entry.getValue().rawData, driveName);
-                                uploaded++;
-                                continue;
-                            }
+                            if (oldMd5.equals(localMd5)) { logDrive("تخطي: " + name); skipped++; continue; }
+                            else { logDrive("تحديث: " + name); updateDriveFile(token, old.getString("id"), entry.getValue().rawData, driveName); uploaded++; continue; }
                         }
                         logDrive("جديد: " + name);
                         createDriveFile(token, driveFolderId, entry.getValue().rawData, driveName);
                         uploaded++;
                     }
                     logDrive("خلصنا Drive: اترفع " + uploaded + " - اتخطى " + skipped);
-                } catch (Exception e) {
-                    logDrive("خطأ Drive: " + e.getMessage());
-                } finally {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() { btnUploadDrive.setEnabled(true); }
-                    });
-                }
+                    logDrive("===== تم الرفع بنجاح =====");
+                } catch (Exception e) { logDrive("خطأ Drive: " + e.getMessage()); }
+                finally { runOnUiThread(new Runnable() { @Override public void run() { btnUploadDrive.setEnabled(true); } }); }
             }
         }).start();
     }
@@ -621,10 +634,7 @@ public class MainActivity extends Activity {
         JSONObject obj = new JSONObject(resp);
         if (obj.has("files")) {
             JSONArray arr = obj.getJSONArray("files");
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject f = arr.getJSONObject(i);
-                map.put(f.getString("name"), f);
-            }
+            for (int i = 0; i < arr.length(); i++) { JSONObject f = arr.getJSONObject(i); map.put(f.getString("name"), f); }
         }
         return map;
     }
@@ -644,9 +654,7 @@ public class MainActivity extends Activity {
             os.write(part1.getBytes(StandardCharsets.UTF_8));
             os.write(data);
             os.write(("\r\n--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
-        } finally {
-            os.close();
-        }
+        } finally { os.close(); }
         int code = conn.getResponseCode();
         String resp = readStreamString(code >= 200 && code < 300 ? conn.getInputStream() : conn.getErrorStream());
         if (code < 200 || code >= 300) throw new Exception("فشل انشاء ملف Drive " + fileName + ": " + resp);
@@ -660,11 +668,7 @@ public class MainActivity extends Activity {
         conn.setRequestProperty("Content-Type", "application/octet-stream");
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        try {
-            os.write(data);
-        } finally {
-            os.close();
-        }
+        try { os.write(data); } finally { os.close(); }
         int code = conn.getResponseCode();
         String resp = readStreamString(code >= 200 && code < 300 ? conn.getInputStream() : conn.getErrorStream());
         if (code < 200 || code >= 300) throw new Exception("فشل تحديث ملف Drive " + fileName + ": " + resp);
@@ -682,9 +686,8 @@ public class MainActivity extends Activity {
                     String mime = cursor.getString(2);
                     if (name.startsWith(".")) continue;
                     String nextPath = currentPath + "/" + name;
-                    if (DocumentsContract.Document.MIME_TYPE_DIR.equals(mime)) {
-                        scanFolderRecursive(treeUri, docId, nextPath, result);
-                    } else {
+                    if (DocumentsContract.Document.MIME_TYPE_DIR.equals(mime)) scanFolderRecursive(treeUri, docId, nextPath, result);
+                    else {
                         Uri fileUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId);
                         byte[] rawBytes = readUriBytes(resolver, fileUri);
                         byte[] gzBytes = gzipBytes(rawBytes);
@@ -697,23 +700,17 @@ public class MainActivity extends Activity {
                         result.put(nextPath, item);
                     }
                 }
-            } finally {
-                cursor.close();
-            }
+            } finally { cursor.close(); }
         }
     }
 
     private String getGoogleAccessToken(String clientEmail, String privateKeyPem, String scope) throws Exception {
         long now = System.currentTimeMillis() / 1000L;
-        JSONObject header = new JSONObject();
-        header.put("alg", "RS256");
-        header.put("typ", "JWT");
+        JSONObject header = new JSONObject(); header.put("alg", "RS256"); header.put("typ", "JWT");
         JSONObject claim = new JSONObject();
-        claim.put("iss", clientEmail);
-        claim.put("scope", scope);
+        claim.put("iss", clientEmail); claim.put("scope", scope);
         claim.put("aud", "https://oauth2.googleapis.com/token");
-        claim.put("iat", now);
-        claim.put("exp", now + 3600);
+        claim.put("iat", now); claim.put("exp", now + 3600);
         String unsignedJwt = base64Url(header.toString().getBytes(StandardCharsets.UTF_8)) + "." + base64Url(claim.toString().getBytes(StandardCharsets.UTF_8));
         String cleanKey = privateKeyPem.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replace("\\n", "").replaceAll("\\s+", "");
         byte[] keyBytes = Base64.decode(cleanKey, Base64.DEFAULT);
@@ -729,11 +726,7 @@ public class MainActivity extends Activity {
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        try {
-            os.write(postData.getBytes(StandardCharsets.UTF_8));
-        } finally {
-            os.close();
-        }
+        try { os.write(postData.getBytes(StandardCharsets.UTF_8)); } finally { os.close(); }
         int code = conn.getResponseCode();
         InputStream is = (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream();
         String resp = readStreamString(is);
@@ -744,21 +737,13 @@ public class MainActivity extends Activity {
     private String httpJsonRequest(String method, String urlStr, String token, String jsonBody) throws Exception {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        if ("PATCH".equals(method)) {
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
-        } else {
-            conn.setRequestMethod(method);
-        }
+        if ("PATCH".equals(method)) { conn.setRequestMethod("POST"); conn.setRequestProperty("X-HTTP-Method-Override", "PATCH"); }
+        else conn.setRequestMethod(method);
         conn.setRequestProperty("Authorization", "Bearer " + token);
         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        try {
-            os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
-        } finally {
-            os.close();
-        }
+        try { os.write(jsonBody.getBytes(StandardCharsets.UTF_8)); } finally { os.close(); }
         int code = conn.getResponseCode();
         InputStream is = (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream();
         String resp = readStreamString(is);
@@ -774,11 +759,7 @@ public class MainActivity extends Activity {
         conn.setRequestProperty("Content-Type", "application/octet-stream");
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        try {
-            os.write(gzData);
-        } finally {
-            os.close();
-        }
+        try { os.write(gzData); } finally { os.close(); }
         int code = conn.getResponseCode();
         if (code < 200 || code >= 300) throw new Exception("فشل رفع الملف (" + code + "): " + readStreamString(conn.getErrorStream()));
     }
@@ -787,24 +768,16 @@ public class MainActivity extends Activity {
         InputStream is = resolver.openInputStream(uri);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            byte[] buf = new byte[8192];
-            int n;
+            byte[] buf = new byte[8192]; int n;
             while ((n = is.read(buf)) != -1) bos.write(buf, 0, n);
             return bos.toByteArray();
-        } finally {
-            is.close();
-            bos.close();
-        }
+        } finally { is.close(); bos.close(); }
     }
 
     private byte[] gzipBytes(byte[] raw) throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         GZIPOutputStream gos = new GZIPOutputStream(bos);
-        try {
-            gos.write(raw);
-        } finally {
-            gos.close();
-        }
+        try { gos.write(raw); } finally { gos.close(); }
         return bos.toByteArray();
     }
 
@@ -824,54 +797,37 @@ public class MainActivity extends Activity {
         return sb.toString();
     }
 
-    private String base64Url(byte[] data) {
-        return Base64.encodeToString(data, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
-    }
+    private String base64Url(byte[] data) { return Base64.encodeToString(data, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING); }
 
     private String readStreamString(InputStream is) throws Exception {
         if (is == null) return "";
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buf = new byte[4096];
-        int n;
+        byte[] buf = new byte[4096]; int n;
         while ((n = is.read(buf)) != -1) bos.write(buf, 0, n);
         return bos.toString("UTF-8");
     }
 
     private void logFb(final String msg) {
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 tvLogFb.append("\n" + msg);
-                scrollLogFb.post(new Runnable() {
-                    @Override
-                    public void run() { scrollLogFb.fullScroll(View.FOCUS_DOWN); }
-                });
+                scrollLogFb.post(new Runnable() { @Override public void run() { scrollLogFb.fullScroll(View.FOCUS_DOWN); } });
             }
         });
     }
-
     private void logGh(final String msg) {
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 tvLogGh.append("\n" + msg);
-                scrollLogGh.post(new Runnable() {
-                    @Override
-                    public void run() { scrollLogGh.fullScroll(View.FOCUS_DOWN); }
-                });
+                scrollLogGh.post(new Runnable() { @Override public void run() { scrollLogGh.fullScroll(View.FOCUS_DOWN); } });
             }
         });
     }
-
     private void logDrive(final String msg) {
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 tvLogDrive.append("\n" + msg);
-                scrollLogDrive.post(new Runnable() {
-                    @Override
-                    public void run() { scrollLogDrive.fullScroll(View.FOCUS_DOWN); }
-                });
+                scrollLogDrive.post(new Runnable() { @Override public void run() { scrollLogDrive.fullScroll(View.FOCUS_DOWN); } });
             }
         });
     }
