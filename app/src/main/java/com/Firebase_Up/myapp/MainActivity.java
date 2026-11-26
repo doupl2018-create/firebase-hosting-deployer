@@ -1,7 +1,10 @@
 package com.dhautomation.firebasedeploy;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -15,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,7 +52,7 @@ public class MainActivity extends Activity {
     private String privateKeyFb = "";
     private TextView tvAccountStatusFb, tvFolderPathFb, tvLogFb;
     private ScrollView scrollLogFb;
-    private Button btnImportJsonFb, btnBrowseFb, btnUploadFb;
+    private Button btnImportJsonFb, btnBrowseFb, btnUploadFb, btnCopyFb;
 
     private Uri folderGh;
     private String ghToken = "";
@@ -57,7 +61,7 @@ public class MainActivity extends Activity {
     private TextView tvGhStatus, tvFolderPathGh, tvLogGh;
     private EditText etGhToken, etGhRepo, etGhBranch;
     private ScrollView scrollLogGh;
-    private Button btnSaveGh, btnBrowseGh, btnUploadGh;
+    private Button btnSaveGh, btnBrowseGh, btnUploadGh, btnCopyGh;
 
     private Uri folderDrive;
     private String driveFolderId = "";
@@ -68,7 +72,7 @@ public class MainActivity extends Activity {
     private TextView tvAccountStatusDrive, tvFolderPathDrive, tvLogDrive;
     private EditText etDriveFolderId, etDriveClientId, etDriveClientSecret, etDriveAuthCode;
     private ScrollView scrollLogDrive;
-    private Button btnGetDriveCode, btnExchangeDriveCode, btnSaveDrive, btnBrowseDrive, btnUploadDrive;
+    private Button btnGetDriveCode, btnExchangeDriveCode, btnSaveDrive, btnBrowseDrive, btnUploadDrive, btnCopyDrive;
 
     private LinearLayout layoutFirebase, layoutGh, layoutDrive;
     private Button tabFirebase, tabGh, tabDrive;
@@ -117,6 +121,7 @@ public class MainActivity extends Activity {
         btnImportJsonFb = findViewById(R.id.btnImportJsonFb);
         btnBrowseFb = findViewById(R.id.btnBrowseFb);
         btnUploadFb = findViewById(R.id.btnUploadFb);
+        btnCopyFb = findViewById(R.id.btnCopyFb);
 
         etGhToken = findViewById(R.id.etGhToken);
         etGhRepo = findViewById(R.id.etGhRepo);
@@ -128,6 +133,7 @@ public class MainActivity extends Activity {
         btnSaveGh = findViewById(R.id.btnSaveGh);
         btnBrowseGh = findViewById(R.id.btnBrowseGh);
         btnUploadGh = findViewById(R.id.btnUploadGh);
+        btnCopyGh = findViewById(R.id.btnCopyGh);
 
         tvAccountStatusDrive = findViewById(R.id.tvAccountStatusDrive);
         tvFolderPathDrive = findViewById(R.id.tvFolderPathDrive);
@@ -142,8 +148,19 @@ public class MainActivity extends Activity {
         btnSaveDrive = findViewById(R.id.btnSaveDrive);
         btnBrowseDrive = findViewById(R.id.btnBrowseDrive);
         btnUploadDrive = findViewById(R.id.btnUploadDrive);
+        btnCopyDrive = findViewById(R.id.btnCopyDrive);
 
         loadSavedSettings();
+
+        btnCopyFb.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { copyLog(tvLogFb, "Firebase"); }
+        });
+        btnCopyGh.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { copyLog(tvLogGh, "GH"); }
+        });
+        btnCopyDrive.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { copyLog(tvLogDrive, "Drive"); }
+        });
 
         btnImportJsonFb.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -273,6 +290,18 @@ public class MainActivity extends Activity {
         showTab(0);
     }
 
+    private void copyLog(TextView tvLog, String name) {
+        String text = tvLog.getText().toString();
+        if (text == null || text.trim().isEmpty()) {
+            Toast.makeText(this, "السجل فاضي", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("DH Log " + name, text);
+        cm.setPrimaryClip(clip);
+        Toast.makeText(this, "تم نسخ سجل " + name, Toast.LENGTH_SHORT).show();
+    }
+
     private void showTab(int tab) {
         layoutFirebase.setVisibility(tab == 0 ? View.VISIBLE : View.GONE);
         layoutGh.setVisibility(tab == 1 ? View.VISIBLE : View.GONE);
@@ -293,8 +322,8 @@ public class MainActivity extends Activity {
         String s = input.trim();
         if (s.endsWith(".git")) s = s.substring(0, s.length() - 4);
         while (s.endsWith("/")) s = s.substring(0, s.length() - 1);
-        if (s.contains(" github.com/")) s = s.substring(s.indexOf(" github.com/") + " github.com/".length());
-        else if (s.contains(" github.com:")) s = s.substring(s.indexOf(" github.com:") + " github.com:".length());
+        if (s.contains(" 【entity-github¦canonical_name=GitHub】.com/")) s = s.substring(s.indexOf(" 【entity-github¦canonical_name=GitHub】.com/") + " 【entity-github¦canonical_name=GitHub】.com/".length());
+        else if (s.contains(" 【entity-github¦canonical_name=GitHub】.com:")) s = s.substring(s.indexOf(" 【entity-github¦canonical_name=GitHub】.com:") + " 【entity-github¦canonical_name=GitHub】.com:".length());
         String[] parts = s.split("/");
         if (parts.length >= 2) s = parts[0] + "/" + parts[1];
         return s.trim();
